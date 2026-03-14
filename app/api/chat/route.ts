@@ -2,11 +2,9 @@ import OpenAI from 'openai'
 import { NextRequest } from 'next/server'
 import { ANFLOY_SYSTEM_PROMPT } from '@/lib/anfloy-prompt'
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-})
-
 export async function POST(req: NextRequest) {
+  // Lazy-init so build doesn't fail without the env var
+  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
   try {
     const { messages } = await req.json()
 
