@@ -14,10 +14,22 @@ interface Message {
 }
 
 const SERVICES = [
-  { emoji: '⚡', label: 'AI Sales Agents',    prompt: 'Tell me about your AI Sales Agents' },
-  { emoji: '📝', label: 'Content Engines',    prompt: 'How do your Content Engines work?' },
-  { emoji: '📚', label: 'Knowledge Bases',    prompt: 'What is an Internal Knowledge Base?' },
-  { emoji: '💬', label: 'AI Chat Assistants', prompt: 'Tell me about the AI Chat Assistant you build' },
+  {
+    icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>,
+    label: 'AI Sales Agents',    prompt: 'Tell me about your AI Sales Agents',
+  },
+  {
+    icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>,
+    label: 'Content Engines',    prompt: 'How do your Content Engines work?',
+  },
+  {
+    icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>,
+    label: 'Knowledge Bases',    prompt: 'What is an Internal Knowledge Base?',
+  },
+  {
+    icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>,
+    label: 'AI Chat Assistants', prompt: 'Tell me about the AI Chat Assistant you build',
+  },
 ]
 
 const ChevronRight = ({ size = 14 }: { size?: number }) => (
@@ -176,7 +188,7 @@ export default function Widget() {
                   className="service-row"
                   onClick={() => sendMessage(s.prompt)}
                 >
-                  <div className="row-icon-box">{s.emoji}</div>
+                  <div className="row-icon-box" style={{ color: 'var(--orange)' }}>{s.icon}</div>
                   <span className="row-label">{s.label}</span>
                   <span className="row-chevron"><ChevronRight /></span>
                 </button>
