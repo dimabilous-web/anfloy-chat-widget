@@ -48,8 +48,11 @@ html, body {
 .widget-root {
   display: flex;
   flex-direction: column;
-  width: 380px;
-  height: 620px;
+  width: 100%;
+  max-width: 380px;
+  /* Fill iframe on mobile, cap at 620px on desktop */
+  height: 100dvh;
+  max-height: 620px;
   border-radius: var(--radius);
   border: 1px solid rgba(255, 104, 32, 0.12);
   overflow: hidden;
