@@ -54,25 +54,51 @@ export async function POST(req: NextRequest) {
     // ── Option 3: Email via Resend ──
     const resendKey = process.env.RESEND_API_KEY
     if (resendKey) {
-      await fetch('https://api.resend.com/emails', {
+      const resendRes = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${resendKey}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          from: 'Anfloy Widget <widget@anfloy.com>',
+          // onboarding@resend.dev works without domain verification on free tier
+          from: 'Anfloy Widget <onboarding@resend.dev>',
           to: ['dimabilous@anfloy.com'],
-          subject: `New lead: ${lead.name}`,
+          subject: `🔥 New lead from chat widget: ${lead.name}`,
           html: `
-            <h2>New lead from chat widget</h2>
-            <p><strong>Name:</strong> ${lead.name}</p>
-            <p><strong>Email:</strong> <a href="mailto:${lead.email}">${lead.email}</a></p>
-            ${lead.message ? `<p><strong>Message:</strong> ${lead.message}</p>` : ''}
-            <p><strong>Time:</strong> ${lead.capturedAt}</p>
+            <div style="font-family: -apple-system, sans-serif; max-width: 480px; margin: 0 auto; background: #0a0a0a; color: #fff; border-radius: 12px; overflow: hidden;">
+              <div style="background: linear-gradient(135deg, #5A1E00, #FF6820); padding: 24px 28px;">
+                <div style="font-size: 22px; font-weight: 800; letter-spacing: -0.5px;">anfloy.</div>
+                <div style="font-size: 14px; opacity: 0.8; margin-top: 4px;">New lead from chat widget</div>
+              </div>
+              <div style="padding: 28px; background: #111;">
+                <table style="width: 100%; border-collapse: collapse;">
+                  <tr>
+                    <td style="padding: 10px 0; color: #888; font-size: 13px; width: 80px;">Name</td>
+                    <td style="padding: 10px 0; color: #fff; font-size: 14px; font-weight: 600;">${lead.name}</td>
+                  </tr>
+                  <tr style="border-top: 1px solid #222;">
+                    <td style="padding: 10px 0; color: #888; font-size: 13px;">Email</td>
+                    <td style="padding: 10px 0; font-size: 14px;"><a href="mailto:${lead.email}" style="color: #FF6820; text-decoration: none; font-weight: 600;">${lead.email}</a></td>
+                  </tr>
+                  ${lead.message ? `<tr style="border-top: 1px solid #222;"><td style="padding: 10px 0; color: #888; font-size: 13px;">Message</td><td style="padding: 10px 0; color: #ccc; font-size: 14px;">${lead.message}</td></tr>` : ''}
+                  <tr style="border-top: 1px solid #222;">
+                    <td style="padding: 10px 0; color: #888; font-size: 13px;">Time</td>
+                    <td style="padding: 10px 0; color: #888; font-size: 13px;">${new Date(lead.capturedAt).toLocaleString('en-US', { timeZone: 'America/New_York', dateStyle: 'medium', timeStyle: 'short' })} ET</td>
+                  </tr>
+                </table>
+                <div style="margin-top: 24px;">
+                  <a href="mailto:${lead.email}" style="display: inline-block; background: #FF6820; color: #fff; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: 600;">Reply to ${lead.name} →</a>
+                </div>
+              </div>
+            </div>
           `,
         }),
-      }).catch(e => console.error('[LEAD] Resend failed:', e))
+      })
+      if (!resendRes.ok) {
+        const err = await resendRes.text()
+        console.error('[LEAD] Resend error:', err)
+      }
     }
 
     return Response.json({ success: true })
